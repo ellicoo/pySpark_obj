@@ -1,0 +1,136 @@
+# git&ML_learn
+# PycharmProjects
+
+# 命令操作
+# 如果是一个空内容的仓库
+# …or create a new repository on the command line
+# 将内容写到markdown文件--README.md，如果文件不存在则创建
+echo "# PycharmProjects" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/ellicoo/PycharmProjects.git
+git push -u origin main
+
+# …or push an existing repository from the command line
+git remote add origin https://github.com/ellicoo/PycharmProjects.git
+git branch -M main
+git push -u origin main
+
+# 大神常用建议
+# 比如需要学习git&ML_learn
+echo "# git&ML_learn" >> README.md
+git init
+git add README.md  添加修改或者增加的文件到缓存，如果不知道修改哪几个文件可以使用git add .
+git commit -m "first commit"
+# 这是与远程仓库PycharmProjects建立的链接
+git remote add origin https://github.com/ellicoo/PycharmProjects.git
+# 这个是将本地的master分支推送到远程，需要使用git branch来查看本地分支名称
+git push -u origin master
+
+
+# 查看最近到最远的提交日志，如果嫌输出信息太多，看得眼花缭乱的，可以试试加上--pretty=oneline参数
+git log
+
+git diff            比较working directory(当前工作目录)和stage(缓存)的差别
+
+git diff --cached   比较stage(缓存)和history(本地仓库/版本库)的差别
+
+git diff HEAD       直接比较working directory和history的区别
+
+# 创建分支
+git branch new_feature
+git checkout new_feature/git switch new_feature 转换到新分支
+新分支是基于你当前所在分支的一个拷贝，因此它会继承该分支的所有提交历史和文件内容
+git branch # 查看当前所在分支，以及包含多少个分支
+
+假设你在本地创建了一个名为 new_feature 的新分支，
+并且在该分支上做了一些提交。当你执行 git push 命令时，
+Git 会尝试将 new_feature 分支推送到远程仓库，并且在远程仓库上创建一个名为 new_feature 的新分支，
+并将本地 new_feature 分支的内容推送到这个新创建的远程分支上。
+如果你想要将本地分支推送到远程仓库的一个不同的分支上，你可以使用以下命令：
+git push origin local_branch:remote_branch
+其中 local_branch 是本地分支的名称，remote_branch 是远程分支的名称。
+这样可以将本地分支推送到远程仓库的另一个分支上，而不是自动在远程仓库上创建一个同名的新分支。
+比如git push origin dening_dev:main
+
+
+# 传输大文件问题，需要清空历史提交
+git init #创建本地仓库环境
+git lfs install #安装大文件上传应用
+git lfs track * #追踪要上传的大文件，*表示路径下的所有文件
+git add .gitattributes #添加先上传的属性文件(要先上传属性文件，不然有可能失败)
+git commit -m "pre" #添加属性文件上传的说明
+git remote add origin https://github.com/Youpeng-Zhang/MOP.git #建立本地和Github仓库的链接
+git push origin master #上传属性git文件
+git add * #添加要上传的大文件，*表示路径下的所有文件
+git commit -m "Git LFS commit" #添加大文件上传的说明
+git push origin master #上传大文件
+
+
+# push远程终端的时候出现：
+User
+otis@OtisdeMacBook-Pro PycharmProjects % git push origin main
+Username for 'https://github.com': ellicoo
+Password for 'https://ellicoo@github.com':
+fatal: unable to access 'https://github.com/ellicoo/PycharmProjects.git/': Failure when receiving data from the peer
+otis@OtisdeMacBook-Pro PycharmProjects %
+尝试：删除之前添加的远程仓库
+git remote remove origin
+git remote remove origin 命令只会将你本地 Git 仓库中的远程仓库配置删除，而不会影响 GitHub 上的实际仓库。这个命令只是删除了本地的一个指向远程仓库的别名（通常叫做 "origin"），它不会删除 GitHub 上的仓库或其中的任何文件。
+""
+重新
+git remote add origin git@github.com:ellicoo/PycharmProjects.git
+git push origin main
+
+
+
+# 代码审查
+
+GitHub 的 "compare & pull request" 功能用于将一个分支的更改合并到另一个分支上，通常用于开发团队协作开发和代码审查。
+说人话：向真正的代码持有者的主分支main发起修改请求？对方在这个时候就可以看到你的代码修改请求，查看后觉得OK，就选择进行合并
+
+这个流程通常包括以下步骤：
+
+1，创建新分支：开发者在本地创建一个新的分支，并在该分支上进行开发工作。
+2，推送到远程：开发者将本地分支推送到远程仓库，通常是 GitHub。
+3，比较分支：在 GitHub 上，开发者可以使用 "compare" 功能来比较两个分支之间的差异。这可以帮助开发者查看新功能或修复的更改，并确保它们符合预期。
+4，创建 Pull Request：如果开发者认为他们的更改已经准备好合并到另一个分支（通常是主分支）上，他们就可以创建一个 Pull Request。在 Pull Request 中，开发者可以提供更改的概述、讨论更改的原因和细节，并指定负责审查更改的人员。
+5，审查和讨论：Pull Request 创建后，团队成员可以查看更改、进行审查并提供反馈。这可以帮助确保代码的质量、避免错误，并提出改进意见。
+6，合并更改：一旦审查通过，并且经过必要的修改和讨论，代码审查人员可以选择将 Pull Request 合并到目标分支中。一旦合并完成，更改就会应用到目标分支中，并且可以在项目的其他部分中使用。
+7，(总结)通过使用 "compare & pull request" 功能，开发团队可以实现有效的代码协作、审查和集成，从而提高代码质量并促进团队合作。
+
+
+# 代码审查的例外
+
+如果你是两个分支的所有者，并且想要将一个分支上的更改合并到另一个分支上，那么创建 "compare & pull request" 多余。
+
+在这种情况下，你可以直接使用 Git 命令来将一个分支的更改合并到另一个分支上，而不需要创建 Pull Request。你可以使用以下命令：
+git checkout dening_dev：切换到你的个人开发分支 dening_dev，确保你在这个分支上进行修改和提交。
+git add .：将你的修改添加到暂存区。
+git commit -m "desc"：提交你的修改，其中 "desc" 是你的提交描述信息。
+git checkout main：切换回主分支 main，这里是你想要将修改合并到的目标分支。
+git merge dening_dev：将个人开发分支 dening_dev 上的更改合并到主分支 main 上。
+git push origin main：将合并后的主分支 main 推送到远程仓库，使得其他人能够访问和查看这些更改。
+
+
+当你是两个分支的所有者时，你可以直接使用 Git 命令来合并分支，而不需要创建 Pull Request。Pull Request
+主要用于向其他人的分支提交更改请求，进行代码审查和合并
+
+
+# GitHub对分支提交代码的三种
+
+GitHub 提供了三种主要的合并方式：
+
+Merge pull request(简单的提交)：
+    主分支main的代码+从分支dening_dev的cmmit1+commit2+commit3=最新的主分支(保留commit1,2,3的版本状态)：main+从分支dening_dev的cmmit1+commit2+commit3
+Squash and merge：
+    第一步：对从分支dening_dev的多次提交形成的各个版本先进行合并：(cmmit1+commit2+commit3)=commit
+    第二步：合并，主分支main的代码+从分支dening_dev的commit(不保留commit1,2,3形成的版本)
+    会把从分支上的所有变更“压缩（squash）”成一个提交，追加到当前分支的后面
+
+Rebase and merge：
+    这会将整个feature分支移动到master分支的顶端，从而有效地整合了所有master的新提交。
+    但是，rebase不是使用merge commit，而是通过为原始分支中的每个提交创建全新的提交来重写项目历史记录。
+    git rebase的黄金法则是永远不要在公共分支使用它。
