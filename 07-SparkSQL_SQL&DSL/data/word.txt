@@ -1,0 +1,4 @@
+hadoop hive hadoop hive sqoop
+sqoop hive hadoop kafka
+sqoop kafka hbase hue
+hadoop sqoop oozie

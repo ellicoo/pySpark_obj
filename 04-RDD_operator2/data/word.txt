@@ -1,0 +1,3 @@
+hadoop|linux|hive|hadoop
+linux|hive|hive|sqoop|sqoop
+sqoop|hadoop|linux|linux
