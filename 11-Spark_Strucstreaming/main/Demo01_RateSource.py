@@ -27,22 +27,22 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-#rate：可以模拟数据源，源源不断地生产数据
-#rowsPerSecond:每秒钟生存多少条数据，默认就是1条
-#rampUpTime：经过多长时间后，达到生产速率，默认是0秒，这里设置为1秒钟
-#numPartitions：分区数，默认是Spark的并行度的数量（分区数）
-input_df = spark.readStream.format("rate")\
-    .option("rowsPerSecond","1")\
-    .option("rampUpTime","1")\
-    .option("numPartitions","1")\
+# rate：可以模拟数据源，源源不断地生产数据
+# rowsPerSecond:每秒钟生存多少条数据，默认就是1条
+# rampUpTime：经过多长时间后，达到生产速率，默认是0秒，这里设置为1秒钟
+# numPartitions：分区数，默认是Spark的并行度的数量（分区数）
+input_df = spark.readStream.format("rate") \
+    .option("rowsPerSecond", "1") \
+    .option("rampUpTime", "1") \
+    .option("numPartitions", "1") \
     .load()
 
 # 3.数据处理
 
 
 # 4.数据输出
-#truncate:是否截断，默认为True，这里如果想看全部内容，要设置为False
-result_df = input_df.writeStream.outputMode("append").format("console").option("truncate","False")
+# truncate:是否截断，默认为True，这里如果想看全部内容，要设置为False
+result_df = input_df.writeStream.outputMode("append").format("console").option("truncate", "False")
 
 # 5.启动流式任务
 result_df.start().awaitTermination()

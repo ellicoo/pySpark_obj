@@ -27,7 +27,7 @@ RDD：
 ｜"flink hbase   hello"     ｜
 ｜"spark zookeeper flink"   ｜
 ---------------------------
-由于这个rdd比较粗糙，每行数据在RDD中都是一个独立的元素，但没有像表格一样有明确的列名或列的类型信息（即缺乏schema）
+由于这个rdd比较粗糙，文本的word_re.txt文档的每行数据在RDD中都是一个独立的元素，但没有像表格一样有明确的列名或列的类型信息（即缺乏schema）
 这种粗糙性需要使用适当的转换操作（如flatMap）来处理每行数据，以便进行进一步的数据操作和分析。
 """
 input_rdd = sc.textFile(get_absolute_path("../data/word_re.txt"))

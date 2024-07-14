@@ -1,11 +1,40 @@
-%pip install -U spacy==3.6.1 ginza ja_ginza
-%pip install --upgrade scipy networkx
-%pip install pydantic
-%pip install urllib3
-# 处理出出现：ModuleNotFoundError: No module named 'click.exceptions'
-# 在运行过程中试图使用了 spacy 库，而这个库依赖于 click 库。然而，在你的环境中找不到 click 库
-# 有时候可以执行成功，这取决于我的作业执行的环境和资源分配情况。有时候，作业可能在主节点上运行，而主节点上已经安装了所需的库，因此不会遇到问题，暂时就没有爆相关的错误。
-%pip install click
+# databricks上的spark环境没有，本脚本迁移需要补充spark环境
+from pyspark.sql import SparkSession
+import os
+
+"""
+-------------------------------------------------
+   Description :	TODO：演示RateSource速率数据源的使用
+   SourceFile  :	Demo01_RateSource
+   Author      :	81196
+   Date	       :	2023/9/21
+-------------------------------------------------
+"""
+
+# 0.设置系统环境变量
+os.environ['JAVA_HOME'] = '/export/server/jdk1.8.0_241/'
+os.environ['HADOOP_HOME'] = '/export/server/hadoop'
+os.environ['PYSPARK_PYTHON'] = '/root/anaconda3/bin/python3'
+os.environ['PYSPARK_DRIVER_PYTHON'] = '/root/anaconda3/bin/python3'
+
+# 1.构建SparkSession
+# 建造者模式：类名.builder.配置…….getOrCreate()
+# 自动帮你构建一个SparkSession对象，只要指定你需要哪些配置就可
+spark = SparkSession \
+    .builder \
+    .master("local[2]") \
+    .appName("SparkSQLAppName") \
+    .config("spark.sql.shuffle.partitions", 4) \
+    .getOrCreate()
+
+# %pip install -U spacy==3.6.1 ginza ja_ginza
+# %pip install --upgrade scipy networkx
+# %pip install pydantic
+# %pip install urllib3
+# # 处理出出现：ModuleNotFoundError: No module named 'click.exceptions'
+# # 在运行过程中试图使用了 spacy 库，而这个库依赖于 click 库。然而，在你的环境中找不到 click 库
+# # 有时候可以执行成功，这取决于我的作业执行的环境和资源分配情况。有时候，作业可能在主节点上运行，而主节点上已经安装了所需的库，因此不会遇到问题，暂时就没有爆相关的错误。
+# %pip install click
 
 import numpy as np
 import pandas as pd
