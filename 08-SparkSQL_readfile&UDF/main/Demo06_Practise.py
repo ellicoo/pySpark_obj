@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 import os
 import pyspark.sql.functions as F
+
 """
 -------------------------------------------------
    Description :	TODO：
@@ -27,10 +28,10 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-input_df = spark.read.csv(path='../data/data.txt',sep='|',schema='id int,name string,sex string,address string')
+input_df = spark.read.csv(path='../data/data.txt', sep='|', schema='id int,name string,sex string,address string')
 
 # 3.数据处理
-#result_df = input_df.groupBy('address').agg(F.count('address').alias("cnt"))
+# result_df = input_df.groupBy('address').agg(F.count('address').alias("cnt"))
 result_df = input_df.groupBy('address').count()
 
 # 4.数据输出

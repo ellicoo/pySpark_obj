@@ -27,30 +27,30 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-#读MySQL，方式一，spark.read.jdbc
-#数据库的url路径
+# 读MySQL，方式一，spark.read.jdbc
+# 数据库的url路径
 url = "jdbc:mysql://node1:3306"
-#表名称，写法是：数据库名.表名
+# 表名称，写法是：数据库名.表名
 tbl = "db_company.emp"
-#连接数据库的用户名和密码，是一个dict类型
-prop = {"user":"root","password":"123456"}
-input_df = spark.read.jdbc(url=url,table=tbl, properties=prop)
-#读mysql，方式二，spark.read.format("jdbc")
-#dbtable：数据库名.表名
-#user：用户名
-#password：密码
-input_df2 = spark.read.format("jdbc")\
-    .option("url",url)\
-    .option("dbtable",tbl)\
-    .option("user","root")\
-    .option("password","123456")\
+# 连接数据库的用户名和密码，是一个dict类型
+prop = {"user": "root", "password": "123456"}
+input_df = spark.read.jdbc(url=url, table=tbl, properties=prop)
+# 读mysql，方式二，spark.read.format("jdbc")
+# dbtable：数据库名.表名
+# user：用户名
+# password：密码
+input_df2 = spark.read.format("jdbc") \
+    .option("url", url) \
+    .option("dbtable", tbl) \
+    .option("user", "root") \
+    .option("password", "123456") \
     .load()
 
 # 3.数据处理
-#数据写入df.write.jdbc，方式一
+# 数据写入df.write.jdbc，方式一
 url2 = "jdbc:mysql://node1:3306/?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true"
-input_df.write.jdbc(url=url2,table="db_company.emp_v2",mode='overwrite',properties=prop)
-#数据写入df.write.format("jdbc")，方式二
+input_df.write.jdbc(url=url2, table="db_company.emp_v2", mode='overwrite', properties=prop)
+# 数据写入df.write.format("jdbc")，方式二
 # input_df2.write.format("jdbc")\
 #     .option("url",url2)\
 #     .option("dbtable","db_company.emp_v2")\
@@ -69,5 +69,3 @@ print("==写入MySQL==")
 
 # 5.关闭SparkContext
 spark.stop()
-
-

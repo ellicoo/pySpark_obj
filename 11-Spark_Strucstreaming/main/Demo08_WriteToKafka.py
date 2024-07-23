@@ -27,23 +27,23 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-input_df = spark.readStream.format("socket").option("host","node1").option("port","9999").load()
+input_df = spark.readStream.format("socket").option("host", "node1").option("port", "9999").load()
 
 # 3.数据处理
-#input_df：value
+# input_df：value
 
 
 # 4.数据输出
-#format('kafka')：把数据写出到Kafka中
-#kafka.bootstrap.servers：Kafka的broker地址
-#topic：Kafka的topic
-#checkpointLocation：往外部介质中输出数据，需要Checkpoint
-query = input_df.writeStream\
-    .outputMode("append")\
-    .format("kafka")\
-    .option("kafka.bootstrap.servers","node1:9092,node2:9092,node3:9092")\
-    .option("topic","test04")\
-    .option("checkpointLocation","../data/ckp3")
+# format('kafka')：把数据写出到Kafka中
+# kafka.bootstrap.servers：Kafka的broker地址
+# topic：Kafka的topic
+# checkpointLocation：往外部介质中输出数据，需要Checkpoint
+query = input_df.writeStream \
+    .outputMode("append") \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "node1:9092,node2:9092,node3:9092") \
+    .option("topic", "test04") \
+    .option("checkpointLocation", "../data/ckp3")
 
 # 5.启动流式任务
 query.start().awaitTermination()

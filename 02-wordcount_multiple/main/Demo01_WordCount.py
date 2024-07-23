@@ -35,7 +35,7 @@ input_rdd = sc.textFile(get_absolute_path("../data/word_re.txt"))
 # 3.处理数据
 result_rdd = input_rdd.flatMap(lambda line: line.split(" ")) \
     .map(lambda word: (word, 1)) \
-    .reduceByKey(lambda x, y: x + y)
+    .reduceByKey(lambda x, y: x + y)  # reduceByKey 中接收的参数是：具有相同键的两个值。即 x 和 y 分别表示具有相同键的两个值
 
 # 4.输出数据
 result_rdd.foreach(lambda x: print(x))

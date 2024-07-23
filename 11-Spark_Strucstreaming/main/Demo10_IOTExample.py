@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 import os
 import pyspark.sql.functions as F
+
 """
 -------------------------------------------------
    Description :	TODO：Spark读取Kafka的数据，统计信号强度大于30的设备信号
@@ -27,9 +28,9 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-input_df = spark.readStream.format("kafka")\
-    .option("kafka.bootstrap.servers","node1:9092,node2:9092,node3:9092")\
-    .option("subscribe","iot")\
+input_df = spark.readStream.format("kafka") \
+    .option("kafka.bootstrap.servers", "node1:9092,node2:9092,node3:9092") \
+    .option("subscribe", "iot") \
     .load()
 
 # 3.数据处理
@@ -48,7 +49,7 @@ print("=================1.DSL===================")
 
 print("=================2.SQL===================")
 input_df.createOrReplaceTempView("t_source")
-#json_tuple，它属于UDTF函数，类似于explode函数，所以需要使用lateral view的语法
+# json_tuple，它属于UDTF函数，类似于explode函数，所以需要使用lateral view的语法
 result_df = spark.sql("""
     select
         deviceType,
@@ -59,7 +60,7 @@ result_df = spark.sql("""
     group by deviceType
 """)
 # 4.数据输出
-query = result_df.writeStream.outputMode("complete").format("console").option("truncate","False")
+query = result_df.writeStream.outputMode("complete").format("console").option("truncate", "False")
 
 # 5.启动流式任务
 query.start().awaitTermination()

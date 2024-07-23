@@ -56,7 +56,6 @@ nested_list_rdd2 = sc.parallelize(nested_list, 5)
 
 flat_list = nested_list_rdd2.flatMap(lambda sublist: sublist)
 
-
 # collect：
 
 # collect--将rdd分布式对象中的每个分区数据，都发送到Driver中，形成一个python list 对象

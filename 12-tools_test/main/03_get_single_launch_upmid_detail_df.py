@@ -1,3 +1,33 @@
+from pyspark.sql import SparkSession
+import os
+import pyspark.sql.functions as F
+
+"""
+-------------------------------------------------
+   Description :	TODO：Spark读取Kafka的数据，统计信号强度大于30的设备信号
+   SourceFile  :	Demo10_IOTExample
+   Author      :	81196
+   Date	       :	2023/9/21
+-------------------------------------------------
+"""
+
+# 0.设置系统环境变量
+os.environ['JAVA_HOME'] = '/export/server/jdk1.8.0_241/'
+os.environ['HADOOP_HOME'] = '/export/server/hadoop'
+os.environ['PYSPARK_PYTHON'] = '/root/anaconda3/bin/python3'
+os.environ['PYSPARK_DRIVER_PYTHON'] = '/root/anaconda3/bin/python3'
+
+# 1.构建SparkSession
+# 建造者模式：类名.builder.配置…….getOrCreate()
+# 自动帮你构建一个SparkSession对象，只要指定你需要哪些配置就可
+spark = SparkSession \
+    .builder \
+    .master("local[2]") \
+    .appName("SparkSQLAppName") \
+    .config("spark.sql.shuffle.partitions", 4) \
+    .getOrCreate()
+
+
 # 没上模型之前
 def get_non_pattern_single_launch_upmid_detail_df(launch_id, winner=None):
     from pyspark.sql import functions as F
@@ -247,6 +277,7 @@ def get_non_pattern_single_launch_upmid_detail_df(launch_id, winner=None):
         print(f"END!!! 返回launch_{tag}_valid_upmid_detail_df")
         return susp_df
 
+
 # 上模型之后的：
 def get_pattern_single_launch_upmid_detail_df(launch_id, winner=None):
     from pyspark.sql import functions as F
@@ -301,7 +332,7 @@ def get_pattern_single_launch_upmid_detail_df(launch_id, winner=None):
             # F.col("UPMID") == F.col("predic_upmid"),
             # 注意时间匹配
             (F.col("UPMID") == F.col("predic_upmid")) & (F.col("received_date") == F.col("day")) & (
-                        F.col("merch_group") == F.col("PRODUCT_MERCH_GROUP")),
+                    F.col("merch_group") == F.col("PRODUCT_MERCH_GROUP")),
             how="left"
         )
     )

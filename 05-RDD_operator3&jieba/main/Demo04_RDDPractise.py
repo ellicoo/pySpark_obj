@@ -28,8 +28,6 @@ sc = SparkContext(conf=conf)
 # uv--user view 用户浏览量 --转换--(天,user_id)-- 去重 -- 再(天,1)--再reducebykey -- 再count
 
 
-
-
 input_rdd = sc.textFile(get_absolute_path("../data/tianchi_user.csv"))
 
 
@@ -47,13 +45,10 @@ def map_line(line):
     lines = line.split(",")
     return (lines[0], lines[1], lines[2], lines[3], lines[4], lines[5][0:10])
 
+
 # 文档说有六个字段，切割数据保留长度为6个的
 # 但凡对数据进行处理--使用map--但凡能用map的地方都能用mapPartition
 filter_rdd = input_rdd.filter(lambda line: len(line.split(",")) == 6).map(lambda line: map_line(line))
-
-
-
-
 
 # #1.分析
 # 预期结果：搜索词	出现次数
@@ -80,8 +75,6 @@ result_rdd = (filter_rdd.map(lambda line: line[5])
               .coalesce(1)
               # 升序排序
               .sortByKey(ascending=True))
-
-
 
 # #1.分析
 # 语义：一个用户搜索某个词，最多搜索了多少次，最少搜索了多少，平均搜索了多少次

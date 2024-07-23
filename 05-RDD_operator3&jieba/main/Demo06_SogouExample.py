@@ -28,7 +28,6 @@ startTime = time.time()
 conf = SparkConf().setMaster("local[2]").setAppName("AppName")
 sc = SparkContext(conf=conf)
 
-
 # 这个路径可以是本地的文件系统，或者是分布式文件系统
 sc.setCheckpointDir("path")
 # 2.数据输入
@@ -142,7 +141,6 @@ endTime = time.time()
 tatalTime = endTime - startTime
 print(f'程序总耗时：{tatalTime}')
 
-
 # spark容错--使用rdd血缘关系进行容错保障
 # 每个操作都是返回一个rdd对象，当一个对象出现问题，可以再计算一次返回新的rdd
 
@@ -171,7 +169,7 @@ print(f'程序总耗时：{tatalTime}')
 # persist，它需要手动释放，blocking阻塞的意思是释放完了后，程序再往下进行
 
 
-#**问题：为了避免重复构建RDD，可以将RDD进行persist缓存，但是如果缓存丢失，还是会重新构建RDD，
+# **问题：为了避免重复构建RDD，可以将RDD进行persist缓存，但是如果缓存丢失，还是会重新构建RDD，
 # 如果有1个RDD，会被使用多次，要经过非常复杂的转换过程才能构建，怎么解决？**
 
 # 将rdd长期持久化存起来，因为有的rdd经过复杂的计算才得到的，所以要保持起来，且不保护rdd的依赖关系--解决方法：checkpoint机制
@@ -199,7 +197,3 @@ print(f'程序总耗时：{tatalTime}')
 
 # **总结**：RDD的完整的容错机制，RDD的某个分区的数据如果丢失，则先去内存找回数据cache，如果内存没有，则去磁盘寻找persist，
 # 如果磁盘没有则去HDFS找（checkpoint），如果HDFS也没有，则从头计算出这部分数据。
-
-
-
-

@@ -23,30 +23,32 @@ conf = SparkConf().setMaster("local[2]").setAppName("AppName")
 sc = SparkContext(conf=conf)
 
 # 2.数据输入
-#2.1 把特殊字符进行广播，在Driver端广播
+# 2.1 把特殊字符进行广播，在Driver端广播
 broadcast_data = sc.broadcast([",", ".", "!", "#", "$", "%", ""])
-#2.2 定义累加器
+# 2.2 定义累加器
 acc = sc.accumulator(0)
-#2.3 读取数据
+# 2.3 读取数据
 input_rdd = sc.textFile(get_absolute_path("../data/accumulator_broadcast_data.txt"))
+
 
 # 3.数据处理
 def map_line(word):
-    #在Executor端获取特殊字符的数据
+    # 在Executor端获取特殊字符的数据
     lists = broadcast_data.value
     global acc
     if word in lists:
-        #累加器+1
+        # 累加器+1
         acc.add(1)
         return False
     else:
         return True
 
+
 # 处理rdd的函数直接调用
-result_rdd = input_rdd.flatMap(lambda line:re.split("\s+",line))\
-    .filter(lambda word:map_line(word))\
-    .map(lambda word:(word,1))\
-    .reduceByKey(lambda x,y: x + y)
+result_rdd = input_rdd.flatMap(lambda line: re.split("\s+", line)) \
+    .filter(lambda word: map_line(word)) \
+    .map(lambda word: (word, 1)) \
+    .reduceByKey(lambda x, y: x + y)
 
 # 4.数据输出
 print(f"词频统计结果为：{result_rdd.collect()}")

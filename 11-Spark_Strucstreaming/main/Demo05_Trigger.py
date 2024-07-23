@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 import os
 import pyspark.sql.functions as F
+
 """
 -------------------------------------------------
    Description :	TODO：演示trigger（触发器）的案例
@@ -27,18 +28,18 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-input_df = spark.readStream.format("socket").option("host","node1").option("port","9999").load()
+input_df = spark.readStream.format("socket").option("host", "node1").option("port", "9999").load()
 
 # 3.数据处理
-result_df = input_df.select(F.explode(F.split("value"," ")).alias("word")).groupBy("word").count()
+result_df = input_df.select(F.explode(F.split("value", " ")).alias("word")).groupBy("word").count()
 
 # 4.数据输出
-#processingTime：以固定的时间间隔运行
-#query = result_df.writeStream.outputMode("complete").format("console").trigger(processingTime='5 seconds')
-#once：只执行一次，就是批处理，不用
+# processingTime：以固定的时间间隔运行
+# query = result_df.writeStream.outputMode("complete").format("console").trigger(processingTime='5 seconds')
+# once：只执行一次，就是批处理，不用
 query = result_df.writeStream.outputMode("complete").format("console").trigger(once=True)
-#continuous：以固定的时间周期性运行（持续），但是尚不成熟，不用
-#query = input_df.writeStream.outputMode("append").format("console").trigger(continuous='5 seconds')
+# continuous：以固定的时间周期性运行（持续），但是尚不成熟，不用
+# query = input_df.writeStream.outputMode("append").format("console").trigger(continuous='5 seconds')
 
 # 5.启动流式任务
 query.start().awaitTermination()

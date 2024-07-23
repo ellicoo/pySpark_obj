@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 import os
 import pyspark.sql.functions as F
+
 """
 -------------------------------------------------
    Description :	TODO：演示Checkpoint的使用
@@ -27,16 +28,15 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-input_df = spark.readStream.format("socket").option("host","node1").option("port","9999").load()
-
+input_df = spark.readStream.format("socket").option("host", "node1").option("port", "9999").load()
 
 # 3.数据处理
-result_df = input_df.select(F.explode(F.split("value"," ")).alias("word")).groupBy("word").count()
+result_df = input_df.select(F.explode(F.split("value", " ")).alias("word")).groupBy("word").count()
 
 # 4.数据输出
-query = result_df.writeStream.outputMode("complete").format("console")\
-    .trigger(processingTime='5 seconds')\
-    .option("checkpointLocation","../data/ckp2")
+query = result_df.writeStream.outputMode("complete").format("console") \
+    .trigger(processingTime='5 seconds') \
+    .option("checkpointLocation", "../data/ckp2")
 
 # 5.启动流式任务
 query.start().awaitTermination()

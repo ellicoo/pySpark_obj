@@ -22,7 +22,7 @@ os.environ['PYSPARK_DRIVER_PYTHON'] = '/root/anaconda3/bin/python3'
 # 自动帮你构建一个SparkSession对象，只要指定你需要哪些配置就可
 spark = SparkSession \
     .builder \
-    .master("local[2]")\
+    .master("local[2]") \
     .appName("SparkSQLAppName") \
     .getOrCreate()
 

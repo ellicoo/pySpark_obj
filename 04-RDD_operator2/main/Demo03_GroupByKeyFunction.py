@@ -27,7 +27,11 @@ input_rdd = sc.textFile(get_absolute_path("../data/word.txt"))
 # 3.数据处理
 # groupByKey算子，只能做分组，不能聚合
 flat_map_rdd = input_rdd.flatMap(lambda line: line.split("|"))
+print(flat_map_rdd.collect())
+print('-----------------')
 map_rdd = flat_map_rdd.map(lambda word: (word, 1))
+print(map_rdd.collect())
+print('-----------------')
 result_rdd = map_rdd.groupByKey().mapValues(list)
 # 4.数据输出
 result_rdd.foreach(lambda x: print(x))

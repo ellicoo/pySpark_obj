@@ -3,6 +3,8 @@ from pyspark.sql import functions as F
 """
 如果操作一个df的行时，需要将第一个df的行数据带入第二个df中进行计算，借助第二个df的计算返回一个值作为第一个df的新列值时候需要
 """
+
+
 # from pyspark.sql import SparkSession
 
 def get_source_community_address_like_count_df(source_df, specify_cpmmunity_df):

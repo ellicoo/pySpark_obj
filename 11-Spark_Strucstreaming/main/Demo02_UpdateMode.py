@@ -27,19 +27,19 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-input_df = spark.readStream.format("socket").option("host","node1").option("port","9999").load()
+input_df = spark.readStream.format("socket").option("host", "node1").option("port", "9999").load()
 
 # 3.数据处理
-#input_df = input_df.where("value > 20")
+# input_df = input_df.where("value > 20")
 input_df = input_df.groupBy("value").count()
 
 # 4.数据输出
-#append：不支持聚合操作，会显示全量数据
-#complete：仅支持聚合操作，它会显示全部的聚合结果
-#update：支持聚合和非聚合操作，仅显示新增的数据（第一次插入和对历史数据更新）
-#工作中怎么选择？
-#如果结果需要聚合，则可以选择complete和update模式，根据是否需要全部显示结果来决定最终的模式
-#如果结果不需要聚合，则可以选择append或者Update模式，根据是否需要全部显示结果来决定最终的模式
+# append：不支持聚合操作，会显示全量数据
+# complete：仅支持聚合操作，它会显示全部的聚合结果
+# update：支持聚合和非聚合操作，仅显示新增的数据（第一次插入和对历史数据更新）
+# 工作中怎么选择？
+# 如果结果需要聚合，则可以选择complete和update模式，根据是否需要全部显示结果来决定最终的模式
+# 如果结果不需要聚合，则可以选择append或者Update模式，根据是否需要全部显示结果来决定最终的模式
 query = input_df.writeStream.outputMode("update").format("console")
 
 # 5.启动流式任务

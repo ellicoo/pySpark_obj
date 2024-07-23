@@ -36,6 +36,5 @@ print(",".join(seg_list_2))
 seg_list_3 = jieba.cut_for_search(line)
 print(",".join(seg_list_3))
 
-
 # 5.关闭SparkContext
 sc.stop()

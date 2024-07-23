@@ -33,9 +33,8 @@ df = spark.createDataFrame(data, ["name", "age"])
 # 选择需要收集的列并调用collect()方法
 # name_list = df.collect() # 取出的列表元素是个行对象:[Row(name='John', age=25), Row(name='Doe', age=30), Row(name='Alice', age=28)]
 # name_list = df.rdd.flatMap(lambda x: x).collect() # 会将行的所有值展平成一个列表,只取值，不取Row行对象: ['John', 25, 'Doe', 30, 'Alice', 28]
-name_list = df.select(df.name).rdd.flatMap(lambda x: x).collect() # 会将行的所有值展平成一个列表,这里只有一列数据，只取值，不取行对象:['John', 'Doe', 'Alice']
+name_list = df.select(df.name).rdd.flatMap(
+    lambda x: x).collect()  # 会将行的所有值展平成一个列表,这里只有一列数据，只取值，不取行对象:['John', 'Doe', 'Alice']
 # for row in name_list:
 #   print(row)
 print(name_list)
-
-

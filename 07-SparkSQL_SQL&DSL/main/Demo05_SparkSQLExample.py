@@ -35,7 +35,7 @@ spark = SparkSession \
     .builder \
     .master("local[2]") \
     .appName("SparkSQLAppName") \
-    .config("spark.sql.shuffle.partitions","4")\
+    .config("spark.sql.shuffle.partitions", "4") \
     .getOrCreate()
 
 # 2.数据输入
@@ -43,9 +43,9 @@ input_df = spark.read.text("../data/word.txt")
 
 # 3.数据处理
 print("=======1.SQL=======")
-#3.1 把DF注册成一张表
+# 3.1 把DF注册成一张表
 input_df.createOrReplaceTempView("t1")
-#3.2 编写SQL，SparkSQL中的函数，大部分都和Hive一样
+# 3.2 编写SQL，SparkSQL中的函数，大部分都和Hive一样
 result_df1 = spark.sql("""
 select word,count(1) as cnt
 from 
@@ -56,9 +56,8 @@ group by word
 """)
 
 print("=======2.DSL=======")
-result_df2 = input_df.select(F.split('value',' ').alias("arrs"))\
+result_df2 = input_df.select(F.split('value', ' ').alias("arrs")) \
     .select(F.explode('arrs').alias("word")).groupBy('word').agg(F.count('word').alias('cnt'))
-
 
 # 4.数据输出
 input_df.printSchema()

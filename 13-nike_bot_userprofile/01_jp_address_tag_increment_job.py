@@ -57,9 +57,11 @@ import click.exceptions
 
 # nlp处理核心
 import spacy
+
 nlp = spacy.load("ja_ginza")
 
 import re
+
 
 def is_digit_or_alpha_char(char):
     # 定义用于检查字符串的正则表达式
@@ -68,11 +70,13 @@ def is_digit_or_alpha_char(char):
     # 检查字符串是否只包含数字和字母
     return re.match(pattern, char)
 
+
 def is_japanese_char(char):
     # 定义日语字符的 Unicode 范围
     japanese_char_pattern = r'[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]'
     # 检查字符是否匹配
     return re.match(japanese_char_pattern, char) is not None
+
 
 def join_strings(str_list):
     # 结果列表
@@ -84,7 +88,7 @@ def join_strings(str_list):
     for s in str_list[1:]:
         # 检查当前temp的最后一个字符和s的第一个字符
         if (temp[-1] != '市' and is_japanese_char(temp[-1]) and is_japanese_char(s[0])) \
-            or (is_digit_or_alpha_char(temp) and is_digit_or_alpha_char(s)):
+                or (is_digit_or_alpha_char(temp) and is_digit_or_alpha_char(s)):
             # 如果是日语字符或者数字/字母，则拼接
             temp += s
         else:
@@ -96,6 +100,7 @@ def join_strings(str_list):
     result.append(temp)
 
     return result
+
 
 def split_on_japan(input_str):
     # Regular expression pattern: (Japan)
@@ -118,7 +123,8 @@ def split_at_last_dash(s):
     else:
         return [s], None
 
-def transform_list(l_before, link_keywords=['-','ー','の'], back_keywords=['丁目','番地','号','f','F']):
+
+def transform_list(l_before, link_keywords=['-', 'ー', 'の'], back_keywords=['丁目', '番地', '号', 'f', 'F']):
     l_after = []
     temp = []  # 用于临时存储待合并的字符串
     room_nums = []  # 用于存储被替换的数字
@@ -128,7 +134,7 @@ def transform_list(l_before, link_keywords=['-','ー','の'], back_keywords=['�
         if item.isdigit() or (item in link_keywords and i + 1 < len(l_before) and l_before[i + 1].isdigit()):
             temp.append(item)
         # 判断是否为'JP'后面跟着link_keywords
-        elif item in ['jp','JP'] and i + 1 < len(l_before) and l_before[i + 1] in link_keywords:
+        elif item in ['jp', 'JP'] and i + 1 < len(l_before) and l_before[i + 1] in link_keywords:
             temp.append(item)
         # 判断是否为back_keywords且前面跟着数字
         elif item in back_keywords and i - 1 >= 0 and l_before[i - 1].isdigit():
@@ -175,6 +181,7 @@ def transform_list(l_before, link_keywords=['-','ー','の'], back_keywords=['�
 
     return output, room_nums
 
+
 def fullwidth_to_halfwidth(s):
     new_string = ""
     for char in s:
@@ -196,12 +203,14 @@ def segmentation(text):
 
 # dening改动后的代码3--测试完毕
 import re
+
+
 def replace_string(input_str):
     if input_str in ['Japan', 'ROOM']:
         return input_str
 
     # 匹配数字开头，除了'b'和'f'外的任意字符，不进行转换
-    pattern1 =  r'^\d(?![bf])[a-zA-Z]$'
+    pattern1 = r'^\d(?![bf])[a-zA-Z]$'
     # 匹配除了'b'和'f'以外的任意字母开头+数字结尾，数字大于等于1, 存疑
     # + 表示很多个
     pattern2 = r'^(?![bf])[a-zA-Z]\d+$'
@@ -217,7 +226,7 @@ def replace_string(input_str):
     # 匹配以'f-'开头，数字大于等于1小于等于70，不进行转换
     # pattern8 = r'^(?![bf])[a-zA-Z]-(?:[1-9]|[1-6][0-9]|70)$'
     # 匹配任意字母开头+-+数字结尾  存疑
-    pattern8= r'^[ ]*[a-zA-Z][ ]*-[ ]*([0-9])+$'
+    pattern8 = r'^[ ]*[a-zA-Z][ ]*-[ ]*([0-9])+$'
     # pattern8= r'^[a-zA-Z]-[1-9]\d*$'
 
     # 检查是否匹配到不需要转换的模式
@@ -236,6 +245,7 @@ def replace_string(input_str):
 
 def convert_list_to_str_for_bert(input_list):
     return [replace_string(each) for each in input_list]
+
 
 # 这是打三个前置标签
 
@@ -318,12 +328,14 @@ def get_history_new_processed_df():
 
     return {"final_data": df, "new_account_id_df": new_account_id_df, "history_df": history_df}
 
+
 # 测试数据
 # get_history_new_processed_df().display()
 
 # 获取中间表，解决数据的左右匹配问题，中间表的数据是parquet文件，在S3中
 
 import boto3
+
 
 def get_matching_s3_objects(bucket, prefix='', suffix=''):
     """
@@ -357,6 +369,7 @@ def get_matching_s3_objects(bucket, prefix='', suffix=''):
             if key.startswith(prefix) and key.endswith(suffix):
                 yield obj
 
+
 def get_inference_paths(bucket, prefix, filename):
     """
     获取包含指定文件名的推断文件夹中的对象路径列表。
@@ -379,6 +392,7 @@ def get_inference_paths(bucket, prefix, filename):
                 s3_path = f's3://{bucket}/{inference_folder_path}/{filename}'
                 paths.append(s3_path)
     return paths
+
 
 # # 指定 S3 存储桶和前缀
 # bucket = 'ngap--customer-data-science--prod--us-east-1'
@@ -449,6 +463,7 @@ def get_mid_processed_df():
 
     return all_data_df
 
+
 # get_mid_processed_df().display()
 
 
@@ -466,7 +481,6 @@ def get_new_df(new_account_id_df):
     # 历史数据旧数据
     # history_df = spark.table("airbot_prod.jp_community_tag_dev")
 
-
     # 找出all_df中存在的account_id，但在history_df中不存在的account_id
     # new_account_id_df = all_df.select("account_id").subtract(history_df.select("account_id"))
 
@@ -480,10 +494,11 @@ def get_new_df(new_account_id_df):
     mid_df = get_mid_processed_df()
     # 只取增量数据
     new_df = mid_df.join(new_account_id_df,
-                            mid_df.forter_address__account_id == new_account_id_df.account_id,
-                        "inner").drop(new_account_id_df.account_id)
-    new_df=new_df.dropDuplicates(["forter_address__shipping_address","forter_address__account_id"])
+                         mid_df.forter_address__account_id == new_account_id_df.account_id,
+                         "inner").drop(new_account_id_df.account_id)
+    new_df = new_df.dropDuplicates(["forter_address__shipping_address", "forter_address__account_id"])
     return new_df
+
 
 # get_new_df().display()
 
@@ -515,7 +530,7 @@ def get_type1_zipcode_shipping_address_processed_address_df(new_account_id_df):
     joined_df = mid_processed_df.join(
         type1_df,
         ((F.col("forter_address__account_id") == F.col("account_id")) & (
-                    F.col("forter_address__shipping_address") == F.col("shipping_address"))),
+                F.col("forter_address__shipping_address") == F.col("shipping_address"))),
         how="inner"
     ).dropDuplicates(["account_id", "shipping_address", "address"]) \
         .select(
@@ -682,23 +697,22 @@ print(f"(增量)与历史数据合后并的数据量：{last_df.count()}")
 
 # 插入中间表
 spark.sql(
-"""
- insert overwrite table airbot_prod.jp_community_tag_dev_temp
-   select a.*,b.community_id from jp_tag_v2 as a inner join airbot_prod.jp_community b on a.account_id=b.forter_address__account_id_list_for_the_address and a.address=b.address
-"""
+    """
+     insert overwrite table airbot_prod.jp_community_tag_dev_temp
+       select a.*,b.community_id from jp_tag_v2 as a inner join airbot_prod.jp_community b on a.account_id=b.forter_address__account_id_list_for_the_address and a.address=b.address
+    """
 )
-
 
 # 插入原表_check后
 spark.sql(
-"""
- insert overwrite table airbot_prod.jp_community_tag_dev select * from airbot_prod.jp_community_tag_dev_temp
-"""
+    """
+     insert overwrite table airbot_prod.jp_community_tag_dev select * from airbot_prod.jp_community_tag_dev_temp
+    """
 )
-
 
 # 正则测试
 import re
+
 
 # 测试 字母-数字组合
 def match_pattern(input_str):
@@ -706,23 +720,23 @@ def match_pattern(input_str):
     pattern = r'^[ ]*[a-zA-Z][ ]*-[ ]*([0-9])+$'
     return re.match(pattern, input_str) is not None
 
+
 test_data = [
-    "a-5",   # 应该匹配
-    "ff-2",   # 不应该匹配
+    "a-5",  # 应该匹配
+    "ff-2",  # 不应该匹配
     "A- 10",  # 应该匹配
-    "Z-100", # 应该匹配
+    "Z-100",  # 应该匹配
     "b-20",  # 应该匹配
     "f-30",  # 应该匹配
-    "c-0",   # 不应该匹配
+    "c-0",  # 不应该匹配
     "d-1s",  # 不应该匹配
     "e-6x",  # 不应该匹配
     "g-7g",  # 不应该匹配
     "h-80",  # 应该匹配
     "i-90",  # 应该匹配
-    "j-100", # 应该匹配
-    "k-101", # 应该匹配
+    "j-100",  # 应该匹配
+    "k-101",  # 应该匹配
 ]
 
 for data in test_data:
     print(f"{data}: {match_pattern(data)}")
-

@@ -24,14 +24,14 @@ sc = SparkContext(conf=conf)
 input_rdd = sc.textFile("../data/word.txt")
 
 # 3.数据处理
-result_rdd = input_rdd.flatMap(lambda line:line.split(" ")).filter(lambda word:word != "hadoop")
+result_rdd = input_rdd.flatMap(lambda line: line.split(" ")).filter(lambda word: word != "hadoop")
 result_rdd2 = result_rdd.count()
-result_rdd3 = input_rdd.flatMap(lambda line:line.split(" ")).sortBy(lambda x:x[0],ascending=True).coalesce(1)
+result_rdd3 = input_rdd.flatMap(lambda line: line.split(" ")).sortBy(lambda x: x[0], ascending=True).coalesce(1)
 
 # 4.数据输出
-result_rdd.foreach(lambda x:print(x))
+result_rdd.foreach(lambda x: print(x))
 print(result_rdd2)
-result_rdd3.foreach(lambda x:print(x))
+result_rdd3.foreach(lambda x: print(x))
 
 # 5.关闭SparkContext
 sc.stop()

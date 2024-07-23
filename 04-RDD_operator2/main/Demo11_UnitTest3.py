@@ -28,7 +28,7 @@ input_rdd = sc.textFile(get_absolute_path("../data/word.txt"))
 result_rdd = input_rdd.flatMap(lambda x: x.split("|")).map(lambda x: (x, 1)).reduceByKey(lambda x, y: x + y)
 
 # 4.数据输出
-result_rdd.foreach(lambda x:print(x))
+result_rdd.foreach(lambda x: print(x))
 
 # 5.关闭SparkContext
 sc.stop()

@@ -24,17 +24,20 @@ sc = SparkContext(conf=conf)
 # 2.数据输入
 input_rdd = sc.textFile(get_absolute_path("../data/film.txt"))
 
-# 3.数据处理
-#方式一
-#result_rdd = input_rdd.filter(lambda line:line.split(" ")[1] != '美国')
 
-#方式二
+# 3.数据处理
+# 方式一
+# result_rdd = input_rdd.filter(lambda line:line.split(" ")[1] != '美国')
+
+# 方式二
 def splitStr(line):
     return line.split(" ")[1] != "美国"
-result_rdd = input_rdd.filter(lambda line:splitStr(line))
+
+
+result_rdd = input_rdd.filter(lambda line: splitStr(line))
 
 # 4.数据输出
-result_rdd.foreach(lambda x:print(x))
+result_rdd.foreach(lambda x: print(x))
 
 # 5.关闭SparkContext
 sc.stop()

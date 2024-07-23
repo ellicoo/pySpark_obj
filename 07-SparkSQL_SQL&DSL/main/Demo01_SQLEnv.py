@@ -233,7 +233,7 @@ df2.show()
 df3.printSchema()
 df3.show()
 
-input_rdd.foreach(lambda x:print(x))
+input_rdd.foreach(lambda x: print(x))
 
 df4.printSchema()
 df4.show()

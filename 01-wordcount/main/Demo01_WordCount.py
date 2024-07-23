@@ -353,8 +353,8 @@ input_rdd = sc.textFile(get_absolute_path("../data/word.txt"), 100)
 # 3.数据处理--使用合适的API处理数据
 # 将存在换行符号的rdd对象经过flatMap，把换行符拿掉，或者处理掉包含嵌套列表的结果--实现扁平化处理
 result_rdd = input_rdd.flatMap(lambda line: line.split(" ")) \
-    .map(lambda word: (word, 1)).reduceByKey(lambda x, y: x + y)
-# map函数会返回一个元祖对象
+    .map(lambda word: (word, 1)).reduceByKey(lambda x, y: x + y)  # reduceByKey 中接收的参数是：具有相同键的两个值。即 x 和 y 分别表示具有相同键的两个值
+# map函数会返回一个元祖对象--做成键值对对象
 
 # 4.数据输出
 result_rdd.foreach(lambda x: print(x))

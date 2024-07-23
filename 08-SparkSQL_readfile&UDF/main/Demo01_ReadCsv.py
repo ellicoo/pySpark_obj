@@ -26,31 +26,27 @@ spark = SparkSession \
     .config("spark.sql.shuffle.partitions", 4) \
     .getOrCreate()
 
-
-
 # 2.数据输入
-#方式一：spark.read.csv方式，默认是(,)分隔符，可以指定固定的分隔符
+# 方式一：spark.read.csv方式，默认是(,)分隔符，可以指定固定的分隔符
 input_df = spark.read.csv("../data/people.csv",
                           schema="name string,age int,job string",
                           sep=";",
                           header=True,
                           inferSchema=True)
 
-#方式二，spark.read.format(“csv”)
-input_df2 = spark.read.format('csv')\
-    .option('sep',';')\
-    .option('header','True')\
-    .option('inferSchema','True')\
+# 方式二，spark.read.format(“csv”)
+input_df2 = spark.read.format('csv') \
+    .option('sep', ';') \
+    .option('header', 'True') \
+    .option('inferSchema', 'True') \
     .load('../data/people.csv')
 
-
-
 # 3.数据处理
-#数据写出,方式一
-#df.write.csv()
-input_df.write.mode('overwrite').csv(path='../data/output/csv01',header=True)
-#df.write.format("csv")
-input_df2.write.format("csv").mode("overwrite").option("header","True").save("../data/output/csv02")
+# 数据写出,方式一
+# df.write.csv()
+input_df.write.mode('overwrite').csv(path='../data/output/csv01', header=True)
+# df.write.format("csv")
+input_df2.write.format("csv").mode("overwrite").option("header", "True").save("../data/output/csv02")
 
 # 4.数据输出
 # input_df.printSchema()

@@ -1,10 +1,11 @@
+from pyspark import StorageLevel
 from pyspark.sql import SparkSession
 import os
 
 """
 -------------------------------------------------
-   Description :	TODO：读写Json文件
-   SourceFile  :	Demo02_ReadWriteJson
+   Description :	TODO：读写CSV文件案例
+   SourceFile  :	Demo01_ReadCsv
    Author      :	81196
    Date	       :	2023/9/14
 -------------------------------------------------
@@ -26,25 +27,21 @@ spark = SparkSession \
     .config("spark.sql.shuffle.partitions", 4) \
     .getOrCreate()
 
-# 2.数据输入
-# 读json文件,方式一：spark.read.json
-input_df = spark.read.json(path="../data/people.json")
-# 读json文件，方式二：spark.read.format(“json”)
-input_df2 = spark.read.format("json").load("../data/people.json")
+# 读取数据集并持久化到内存和磁盘中，使用序列化存储
+df = spark.read.csv("data.csv")
+df.persist(StorageLevel.MEMORY_AND_DISK_SER)
 
-# 3.数据处理
-# 写json文件,方式一：df.write.json
-input_df.write.json(path='../data/output/json01', mode="overwrite")
-# 写json文件，方式二：df.write.format("json")
-input_df2.write.format("json").mode("overwrite").save("../data/output/json02")
+# 第一次使用 df，Spark 会计算并将结果缓存
+result1 = df.filter(df["column1"] > 100).groupBy("group_column").agg(avg("value_column"))
+result1.show()
 
-# 4.数据输出
-input_df.printSchema()
-input_df.show()
-input_df2.printSchema()
-input_df2.show()
+# 第二次使用相同的 df，Spark 将直接从缓存中获取数据，而不会重新计算
+result2 = df.filter(df["column2"] == "some_value").count()
+print(result2)
 
-print("==写出json文件==")
+# 可以继续对 df 进行操作，Spark 会复用已经持久化的数据
+result3 = df.groupBy("category").count()
+result3.show()
 
-# 5.关闭SparkContext
-spark.stop()
+# 最后释放持久化的资源
+df.unpersist()

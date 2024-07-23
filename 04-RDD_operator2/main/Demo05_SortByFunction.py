@@ -25,16 +25,16 @@ sc = SparkContext(conf=conf)
 input_rdd = sc.textFile(get_absolute_path("../data/time_music_party.csv"))
 
 # 3.数据处理
-#sortBy算子，适用于非KV类型的RDD
-result_rdd = input_rdd.sortBy(lambda line:line.split(",")[1], ascending=False)
+# sortBy算子，适用于非KV类型的RDD
+result_rdd = input_rdd.sortBy(lambda line: line.split(",")[1], ascending=False)
 
 # 4.数据输出
 print("============1.分区数量==============")
 print(result_rdd.getNumPartitions())
 print("============2.分区内的元素==============")
-result_rdd.glom().foreach(lambda x:print(x))
+result_rdd.glom().foreach(lambda x: print(x))
 print("============3.所有元素==============")
-result_rdd.foreach(lambda x:print(x))
+result_rdd.foreach(lambda x: print(x))
 
 # 5.关闭SparkContext
 sc.stop()

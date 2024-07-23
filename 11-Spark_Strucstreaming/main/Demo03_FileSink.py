@@ -27,20 +27,20 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-input_df = spark.readStream.format("socket").option("host","node1").option("port","9999").load()
+input_df = spark.readStream.format("socket").option("host", "node1").option("port", "9999").load()
 
 # 3.数据处理
 
 
 # 4.数据输出
-#format：FileSink（文件输出）需要指定输出不同的文件类型，比如csv、json、parquet、orc等
-#path：指定文件的路径，这里要用路径！！！！
-#checkpointLocation：指定流式任务的Checkpoint路径，路径会自动创建，不要提前创建好！！！！
-query = input_df.writeStream\
-    .outputMode("append")\
-    .format("json")\
-    .option("path","../data")\
-    .option("checkpointLocation","../data/ckp")
+# format：FileSink（文件输出）需要指定输出不同的文件类型，比如csv、json、parquet、orc等
+# path：指定文件的路径，这里要用路径！！！！
+# checkpointLocation：指定流式任务的Checkpoint路径，路径会自动创建，不要提前创建好！！！！
+query = input_df.writeStream \
+    .outputMode("append") \
+    .format("json") \
+    .option("path", "../data") \
+    .option("checkpointLocation", "../data/ckp")
 
 # 5.启动流式任务
 query.start().awaitTermination()

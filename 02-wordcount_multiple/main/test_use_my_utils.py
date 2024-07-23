@@ -6,4 +6,3 @@ import sys
 # 这里我使用的是远程服务器
 # sys.path.append('/root/projects/pySpark')
 sys.path.append('/root/projects/pySpark/my_utils')
-

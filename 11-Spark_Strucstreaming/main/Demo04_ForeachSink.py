@@ -27,27 +27,32 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-input_df = spark.readStream.format("socket").option("host","node1").option("port","9999").load()
+input_df = spark.readStream.format("socket").option("host", "node1").option("port", "9999").load()
+
 
 # 3.数据处理
 
 
 # 4.数据输出
-#4.1普通函数输出
-#query = input_df.writeStream.outputMode("append").foreach(lambda x:print(x))
-#4.2使用对象输出
+# 4.1普通函数输出
+# query = input_df.writeStream.outputMode("append").foreach(lambda x:print(x))
+# 4.2使用对象输出
 class RowPrinter:
-    #open方法，一般用于开辟连接操作，仅执行一次，可选的方式
+    # open方法，一般用于开辟连接操作，仅执行一次，可选的方式
     def open(self, partition_id, epoch_id):
         print("打开jdbc连接......")
         return True
-    #核心方法，必须有，用于数据处理
+
+    # 核心方法，必须有，用于数据处理
     def process(self, row):
         print("数据处理方法......")
         print(row)
-    #close方法，一般用于关闭连接操作，仅执行一次，可选的方法
+
+    # close方法，一般用于关闭连接操作，仅执行一次，可选的方法
     def close(self, error):
         print("关闭jdbc连接......")
+
+
 query = input_df.writeStream.outputMode("append").foreach(RowPrinter())
 
 # 5.启动流式任务

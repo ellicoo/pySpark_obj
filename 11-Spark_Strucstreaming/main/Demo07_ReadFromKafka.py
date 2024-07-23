@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 import os
 import pyspark.sql.functions as F
+
 """
 -------------------------------------------------
    Description :	TODO：读取Kafka的数据
@@ -27,29 +28,28 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
-#format('kafka')：读取Kafka中的数据
-#kafka.bootstrap.servers：指定Kafka的broker地址
-#subscribe：指定Kafka的topic，这个topic最好提前创建好
-input_df = spark.readStream\
-    .format("kafka")\
-    .option("kafka.bootstrap.servers","node1:9092,node2:9092,node3:9092")\
-    .option("subscribe","test03")\
+# format('kafka')：读取Kafka中的数据
+# kafka.bootstrap.servers：指定Kafka的broker地址
+# subscribe：指定Kafka的topic，这个topic最好提前创建好
+input_df = spark.readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "node1:9092,node2:9092,node3:9092") \
+    .option("subscribe", "test03") \
     .load()
 
 # 3.数据处理
-#select
+# select
 # from table
 # group by
-#expr(sql)
-#select(dsl)
-#selectExpr(可以在dsl中写sql)
-#result_df = input_df.selectExpr("cast(value as string)")
-#withColunn：新增列或者重命名某个已存在的列
-result_df = input_df.withColumn("value",F.expr("cast(value as string)"))
-
+# expr(sql)
+# select(dsl)
+# selectExpr(可以在dsl中写sql)
+# result_df = input_df.selectExpr("cast(value as string)")
+# withColunn：新增列或者重命名某个已存在的列
+result_df = input_df.withColumn("value", F.expr("cast(value as string)"))
 
 # 4.数据输出
-query = result_df.writeStream.outputMode("append").format("console").option("truncate","False")
+query = result_df.writeStream.outputMode("append").format("console").option("truncate", "False")
 
 # 5.启动流式任务
 query.start().awaitTermination()

@@ -58,20 +58,20 @@ os.environ['PYSPARK_PYTHON'] = '/root/anaconda3/bin/python3'
 # 配置base环境Python解析器的路径
 os.environ['PYSPARK_DRIVER_PYTHON'] = '/root/anaconda3/bin/python3'
 
-#1.构建Spark环境
+# 1.构建Spark环境
 conf = SparkConf().setAppName("wordcount").setMaster("local")
 sc = SparkContext(conf=conf)
 
-#2.读取数据
+# 2.读取数据
 # 之前的写法只能处理固定的某个文件，在工作中，数据源应该是由用户指定，而不能是固定的。---引出动态传参
 
 # 需求：读取HDFS分布式文件系统的文件，对文件进行词频统计，且文件由用户输入。
 # 由于数据的位置是动态的，所以代码中的数据地址也必须为动态的---松耦合
 
 # python通过sys包的argv方法来实现动态传参数。
-#1.导包
+# 1.导包
 # import sys
-#2.语法
+# 2.语法
 # sys.argv[0] # 由于python运行代码的特殊性，这个参数固定为python文件的名称，所以不作为第一个参数
 # sys.argv[1] # 表示程序真正传递到程序中的第1个参数
 # sys.argv[2] # 表示程序真正传递到程序中的第2个参数
@@ -82,13 +82,13 @@ sc = SparkContext(conf=conf)
 # hdfs://node1:8020/spark/wordcount/input/word_re.txt hdfs://node1:8020/spark/wordcount/output1
 input_rdd = sc.textFile(sys.argv[1])
 
-#3.处理数据
-result_rdd = input_rdd.flatMap(lambda line : line.split(" "))\
-    .map(lambda word : (word,1))\
-    .reduceByKey(lambda x,y : x + y)
+# 3.处理数据
+result_rdd = input_rdd.flatMap(lambda line: line.split(" ")) \
+    .map(lambda word: (word, 1)) \
+    .reduceByKey(lambda x, y: x + y)  # reduceByKey 中接收的参数是：具有相同键的两个值。即 x 和 y 分别表示具有相同键的两个值
 
-#4.输出数据
+# 4.输出数据
 result_rdd.saveAsTextFile(sys.argv[2])
 
-#5.停止Spark环境
+# 5.停止Spark环境
 sc.stop()

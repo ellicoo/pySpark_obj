@@ -21,12 +21,12 @@ conf = SparkConf().setMaster("local[2]").setAppName("AppName")
 sc = SparkContext(conf=conf)
 
 # 2.数据输入
-rdd_kv = sc.parallelize([('laoda',11),('laoer',22),('laosan',33),('laosi',44)], numSlices=2)
+rdd_kv = sc.parallelize([('laoda', 11), ('laoer', 22), ('laosan', 33), ('laosi', 44)], numSlices=2)
 
 # 3.数据处理
-#3.1 获取所有的key
+# 3.1 获取所有的key
 keys_rdd = rdd_kv.keys()
-#3.2 获取所有的value
+# 3.2 获取所有的value
 values_rdd = rdd_kv.values()
 
 # 4.数据输出

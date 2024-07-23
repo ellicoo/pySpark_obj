@@ -60,10 +60,9 @@ print('使用glom时')
 # 使用 glom() ，将rdd中的各分区变成数组
 glommed_rdd = original_rdd.glom()
 print('使用glom不使用collect时打印rdd对象')
-print(glommed_rdd) # PythonRDD[3] at RDD at PythonRDD.scala:53
+print(glommed_rdd)  # PythonRDD[3] at RDD at PythonRDD.scala:53
 print('使用glom+collect时打印rdd对象')
-print(glommed_rdd.collect()) # [[1, 2], [3, 4], [5, 6], [7, 8]]
-
+print(glommed_rdd.collect())  # [[1, 2], [3, 4], [5, 6], [7, 8]]
 
 # glommed_rdd 中的每个元素都是一个数组，包含了原始 RDD 中一个分区的数据
 # 例如，glommed_rdd 的第一个元素就是 [1, 2]

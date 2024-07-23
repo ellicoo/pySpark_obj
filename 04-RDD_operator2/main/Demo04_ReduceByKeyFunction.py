@@ -25,14 +25,14 @@ sc = SparkContext(conf=conf)
 input_rdd = sc.textFile(get_absolute_path("../data/word.txt"))
 
 # 3.数据处理
-#groupByKey：先ByKey，再group，没有聚合的功能
-#reduceByKey：先ByKey，再reduce，有聚合的功能
-flat_map_rdd = input_rdd.flatMap(lambda line:line.split("|"))
-map_rdd = flat_map_rdd.map(lambda word:(word,1))
-result_rdd = map_rdd.reduceByKey(lambda item,tmp:item + tmp)
+# groupByKey：先ByKey，再group，没有聚合的功能
+# reduceByKey：先ByKey，再reduce，有聚合的功能
+flat_map_rdd = input_rdd.flatMap(lambda line: line.split("|"))
+map_rdd = flat_map_rdd.map(lambda word: (word, 1))
+result_rdd = map_rdd.reduceByKey(lambda item, tmp: item + tmp)
 
 # 4.数据输出
-result_rdd.foreach(lambda x:print(x))
+result_rdd.foreach(lambda x: print(x))
 
 # 5.关闭SparkContext
 sc.stop()

@@ -21,15 +21,15 @@ conf = SparkConf().setMaster("local[2]").setAppName("AppName")
 sc = SparkContext(conf=conf)
 
 # 2.数据输入
-input_rdd = sc.parallelize(['长津湖','流浪地球','长津湖之水门桥','长津湖之水门桥','流浪地球2'])
+input_rdd = sc.parallelize(['长津湖', '流浪地球', '长津湖之水门桥', '长津湖之水门桥', '流浪地球2'])
 
 # 3.数据处理
-#map算子，实现对数据的一对一转换处理
-result_rdd = input_rdd.map(lambda  movie:movie + '<吴京主演>')
+# map算子，实现对数据的一对一转换处理
+result_rdd = input_rdd.map(lambda movie: movie + '<吴京主演>')
 
 # 4.数据输出
 print(input_rdd.collect())
-result_rdd.foreach(lambda movie:print(movie))
+result_rdd.foreach(lambda movie: print(movie))
 
 # 5.关闭SparkContext
 sc.stop()

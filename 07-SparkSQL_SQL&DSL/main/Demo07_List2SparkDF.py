@@ -33,16 +33,16 @@ result_address_list = ["value1", "value2", "value3"]
 df = spark.createDataFrame([(value,) for value in result_address_list], ["upmid"])
 
 # 打印DataFrame的内容
-df.display()
-
-
+# df.display() databricks中默认可用，但不是标志的spark API
+df.show()
 # exmple_2
 # 定义列表
-my_list = [(1,"tea"),(2,"coffee"),(3,"milk")]
+my_list = [(1, "tea"), (2, "coffee"), (3, "milk")]
 
 # 创建DataFrame
-df = spark.createDataFrame(my_list, ["upmid","oder"])
+df = spark.createDataFrame(my_list, ["upmid", "oder"])
 
 # 打印DataFrame的内容
 df.printSchema()
-df.display()
+# df.display() databricks中默认可用，但不是标志的spark API
+df.show()

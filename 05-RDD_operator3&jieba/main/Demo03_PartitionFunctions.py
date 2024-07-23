@@ -20,7 +20,6 @@ os.environ['PYSPARK_DRIVER_PYTHON'] = '/root/anaconda3/bin/python3'
 conf = SparkConf().setMaster("local[2]").setAppName("AppName")
 sc = SparkContext(conf=conf)
 
-
 # **数据**：有一个RDD读文件产生，有两个分区，每个分区有50万条数据
 #
 # **需求**：需要将RDD的数据进行一对一的处理转换，最后用将转换好的结果写入MySQL，怎么实现
@@ -46,8 +45,10 @@ def f(iter):
     for x in iter:
         print(x)
 
+
 # f函数只被调用了2次--因为只有两个分区
 sc.parallelize([1, 2, 3, 4, 5], numSlices=2).foreachPartition(f)
+
 
 def f2(x):
     print('f2被调用..')
@@ -58,13 +59,13 @@ def f2(x):
     # for xx in x:
     #     print(xx)
 
+
 # f2函数被调用了5次
 sc.parallelize([1, 2, 3, 4, 5], numSlices=2).foreach(f2)
 print('-------------字符串内容的rdd的foreach--------------')
 sc.parallelize(['a', 'b', 'c', 'd', 'f'], numSlices=2).foreach(f2)
 print('-------------字符串内容的rdd的foreachPartition--------------')
 sc.parallelize(['a', 'b', 'c', 'd', 'f'], numSlices=2).foreachPartition(f2)
-
 
 # 5.关闭SparkContext
 sc.stop()
