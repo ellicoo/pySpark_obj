@@ -27,6 +27,7 @@ spark = SparkSession \
     .config("spark.sql.shuffle.partitions", 4) \
     .getOrCreate()
 
+
 # 操作之前要更新表
 def refresh_all_table():
     # 更新表：
@@ -52,6 +53,7 @@ def refresh_all_table():
     spark.sql("refresh table airbot_prod.forter_community_score")
     spark.sql("refresh table airbot_prod.community_score")
     spark.sql("refresh table airbot_prod.suspicious_email_account")
+
 
 # 没上模型的时候：
 # 未上模型的函数
@@ -278,7 +280,7 @@ def get_non_pattern_launch_id_contrast_df(PRODUCT_COUNTRY, received_date):
                                                                             == "INVALID"), 1)).over(window_spec))
             .withColumn("winner_heuristics_bot", F.count(F.when(
             (F.col("heuristics_is_human") == 0) & (F.col("ENTRY_STATUS") == "WINNER") & (
-                        F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
+                    F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
 
             # 计算fairness
             # 增加predict_fairness、actual_fairness、perc_drop_in_fairness_accuracy
@@ -319,13 +321,13 @@ def get_non_pattern_launch_id_contrast_df(PRODUCT_COUNTRY, received_date):
             1)).over(window_spec))
             .withColumn("winner_MRS_heuristics_bot_20", F.count(F.when(
             (F.col("ENTRY_STATUS") == "WINNER") & (F.col("bot_20") == 1) & (F.col("heuristics_is_human") == 0) & (
-                        F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
+                    F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
             .withColumn("winner_MRS_heuristics_bot_35", F.count(F.when(
             (F.col("ENTRY_STATUS") == "WINNER") & (F.col("bot_35") == 1) & (F.col("heuristics_is_human") == 0) & (
-                        F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
+                    F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
             .withColumn("winner_MRS_heuristics_bot", F.count(F.when(
             (F.col("ENTRY_STATUS") == "WINNER") & (F.col("suspicous") == 1) & (F.col("heuristics_is_human") == 0) & (
-                        F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
+                    F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
     )
 
     # 筛选需要的字段
@@ -671,13 +673,13 @@ def get_pattern_launch_id_contrast_df(PRODUCT_COUNTRY, received_date):
                    1)).over(window_spec))
             .withColumn("winner_MRS_themis_bot_35", F.count(F.when(
             (F.col("ENTRY_STATUS") == "WINNER") & (F.col("bot_35") == 1) & (F.col("is_human") == 0) & (
-                        F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
+                    F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
             .withColumn("winner_MRS_themis_bot_20", F.count(F.when(
             (F.col("ENTRY_STATUS") == "WINNER") & (F.col("bot_20") == 1) & (F.col("is_human") == 0) & (
-                        F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
+                    F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
             .withColumn("winner_MRS_themis_bot", F.count(F.when(
             (F.col("ENTRY_STATUS") == "WINNER") & (F.col("suspicous") == 1) & (F.col("is_human") == 0) & (
-                        F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
+                    F.col("VALIDATION_RESULT") == "VALID"), 1)).over(window_spec))
     )
 
     # 筛选需要的字段
@@ -753,10 +755,10 @@ def get_pattern_launch_id_contrast_df(PRODUCT_COUNTRY, received_date):
 
     return grouped_flag_reasult_df
 
-# grouped_flag_reasult_df.createOrReplaceTempView("tmp_of_launch_entries_KR_distinct_launch_id")
 
+# grouped_flag_reasult_df.createOrReplaceTempView("tmp_of_launch_entries_KR_distinct_launch_id")
 
 
 # 使用案例
 spark.sql("SET spark.databricks.queryWatchdog.maxQueryTasks=150000")
-get_non_pattern_launch_id_contrast_df("KR","2023-07-01").display()
+get_non_pattern_launch_id_contrast_df("KR", "2023-07-01").display()
