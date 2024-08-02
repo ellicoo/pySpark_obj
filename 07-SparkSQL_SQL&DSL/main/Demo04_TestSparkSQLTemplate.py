@@ -27,11 +27,13 @@ spark = SparkSession \
     .getOrCreate()
 
 # 2.数据输入
+# 这个spark.table操作就是会在executor的JVM虚拟机的堆中创建一个初始的RDD类对象来存储"bot_master_all_risk_level_score"表的数据
 risk_df = spark.table("airbot_prod.bot_master_all_risk_level_score").filter(
     (F.col("score") >= 35) & (F.col("human") != 1)).dropDuplicates(["identity_upm"])
 
 # 3.数据处理
 # 不包含逻辑
+# 每次进行转换类算子的计算--如filter等，都是通过对旧的RDD类对象进行计算操作，然后在JVM中又创建一个新的RDD类的子类对象，然后用这个子类对象储存旧RDD类对象的计算结果
 df = risk_df.filter(~F.array_contains("reason", "session_flag"))
 # 包含逻辑
 # df = risk_df.filter(~F.array_contains("reason", "session_flag"))
