@@ -192,8 +192,8 @@ SparkSession类：
 # 通过内部类构建者builder的getOrCreate()方法返回外部类SparkSession的对象
 # flink中的table类通过内部类createtable的成员方法的build()创建对象
 # flink中的schema信息也是这样
-
-spark = SparkSession.builder.master("local[2]").appName("PparkSQL").getOrCreate()
+# 如果在提交代码到集群的时候不指定配置executor的JVM内存（即通过spark-submit --conf spark.executor.memory=8g ...来覆盖默认配置JVM的-Xmx4g），可以在代码中直接配置
+spark = SparkSession.builder.master("local[2]").appName("PparkSQL").config("spark.executor.memory", "8g").getOrCreate()
 
 # 2.数据输入
 # df表示一个DataFrame，本质上就是一张表
