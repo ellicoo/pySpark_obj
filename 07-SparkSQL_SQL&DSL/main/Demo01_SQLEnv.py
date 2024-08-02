@@ -193,6 +193,11 @@ SparkSession类：
 # flink中的table类通过内部类createtable的成员方法的build()创建对象
 # flink中的schema信息也是这样
 # 如果在提交代码到集群的时候不指定配置executor的JVM内存（即通过spark-submit --conf spark.executor.memory=8g ...来覆盖默认配置JVM的-Xmx4g），可以在代码中直接配置
+# --executor-memory 或 spark.executor.memory 参数用于配置 executor 进程的JVM内存:
+# --executor-memory:
+# 当你在提交作业时使用这个参数，它会设置每个 executor 的堆内存大小。这直接设置了 JVM 的 -Xmx 参数。
+# spark.executor.memory:
+# 在 Spark 配置中设置这个参数也会影响到 executor 的堆内存大小，等同于设置 -Xmx
 spark = SparkSession.builder.master("local[2]").appName("PparkSQL").config("spark.executor.memory", "8g").getOrCreate()
 
 # 2.数据输入
