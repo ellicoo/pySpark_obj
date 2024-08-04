@@ -99,6 +99,11 @@ def get_non_pattern_launch_id_contrast_df(PRODUCT_COUNTRY, received_date):
     window_spec = Window().partitionBy("LAUNCH_ID")
 
     # 此处只进行一次join操作，统计量的计算正确
+    # 使用 F.expr 和 IF 进行窗口计算
+    # df_with_counts = df.withColumn(
+    #     "is_browse_cnt",
+    #     F.count(F.expr("IF(is_browse = 1, user_id, NULL)")).over(window_spec)
+    # )
     result_df = (
         joined_df.
             # 假如不存在第一层反欺诈，本统计的是所有参加本次活动的人数
