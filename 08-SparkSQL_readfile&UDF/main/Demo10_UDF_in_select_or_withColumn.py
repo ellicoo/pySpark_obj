@@ -64,6 +64,7 @@ def merge_old_df_and_new_df(self, new_df, old_df, fiveTagIDStr):
 
 
     # 窗口函数
+    from pyspark.sql.window import Window
     window_spec = Window().partitionBy("LAUNCH_ID")
 
     # 此处只进行一次join操作，统计量的计算正确
