@@ -118,6 +118,16 @@ def get_non_pattern_launch_id_contrast_df(PRODUCT_COUNTRY, received_date):
             .withColumn("ratio_winner_to_valid", F.round(F.col("winner") / F.col("valid"), 3))
 
     )
+    # 等价操作--逻辑细节需要调整
+    # result_df = joined_df.select(
+    #     "*",
+    #     F.count(F.expr("if(ENTRY_STATUS = 'WINNER', 1, NULL)")).over(window_spec).alias("winner"),
+    #     F.count(F.expr("if(VALIDATION_RESULT = 'INVALID', 1, NULL)")).over(window_spec).alias("invalid"),
+    #     F.count(F.expr("if(VALIDATION_RESULT = 'VALID', 1, NULL)")).over(window_spec).alias("valid"),
+    #     F.round(F.count(F.expr("if(ENTRY_STATUS = 'WINNER', 1, NULL)")).over(window_spec)
+    #
+    # 但是select的弊端是必须等待上面的执行完才能另外执行对结果列的操作，而withColumn则直接链式操作，select 的下列操作必须另外执行：
+    #     F.round(F.col("winner") / F.col("valid"), 3).alias("ratio_winner_to_valid")
 
     filtered_result_df = result_df.filter(F.col("valid") >= 500)
 
