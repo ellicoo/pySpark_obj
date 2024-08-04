@@ -63,7 +63,7 @@ def merge_old_df_and_new_df(self, new_df, old_df, fiveTagIDStr):
     return result_df
 
 
-# 窗口函数
+    # 窗口函数
     window_spec = Window().partitionBy("LAUNCH_ID")
 
     # 此处只进行一次join操作，统计量的计算正确
