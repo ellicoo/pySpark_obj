@@ -102,6 +102,7 @@ def merge_old_df_and_new_df(self, new_df, old_df, fiveTagIDStr):
     # 这些只是表达式的定义。Spark会在实际执行时将这些表达式作为一个整体优化处理，而不是为每个表达式创建单独的DataFrame。
     # 换句话说，Spark在执行时会将这些计算合并在一起，避免不必要的中间数据存储
     # count_winner_col,count_invalid_col,count_valid_col这三个是一个Column对象，不是dataframe对象。
+    # 【注意】F.count函数必须与"groupBy函数"和"window窗口"函数一起使用
     count_winner_col = F.count(F.expr("if(ENTRY_STATUS = 'WINNER', 1, NULL)")).over(window_spec)
     count_invalid_col = F.count(F.expr("if(VALIDATION_RESULT = 'INVALID', 1, NULL)")).over(window_spec)
     count_valid_col = F.count(F.expr("if(VALIDATION_RESULT = 'VALID', 1, NULL)")).over(window_spec)
