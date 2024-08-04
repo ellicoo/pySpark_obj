@@ -96,6 +96,23 @@ def merge_old_df_and_new_df(self, new_df, old_df, fiveTagIDStr):
     #     F.round(F.count(F.expr("if(ENTRY_STATUS = 'WINNER', 1, NULL)")).over(window_spec) /
     #                 F.count(F.expr("if(VALIDATION_RESULT = 'VALID', 1, NULL)")).over(window_spec), 3).alias("ratio_winner_to_valid")
 
+    # 优化select与expr操作
+    # 计算中间结果，避免重复计算--尽管代码中看起来有三个中间结果（count_winner、count_invalid、count_valid），
+    # 这些只是表达式的定义。Spark会在实际执行时将这些表达式作为一个整体优化处理，而不是为每个表达式创建单独的DataFrame。
+    # 换句话说，Spark在执行时会将这些计算合并在一起，避免不必要的中间数据存储
+    count_winner = F.count(F.expr("if(ENTRY_STATUS = 'WINNER', 1, NULL)")).over(window_spec)
+    count_invalid = F.count(F.expr("if(VALIDATION_RESULT = 'INVALID', 1, NULL)")).over(window_spec)
+    count_valid = F.count(F.expr("if(VALIDATION_RESULT = 'VALID', 1, NULL)")).over(window_spec)
+
+    # 使用中间结果进行选择
+    result_df = joined_df.select(
+        "*",
+        count_winner.alias("winner"),
+        count_invalid.alias("invalid"),
+        count_valid.alias("valid"),
+        F.round(count_winner / F.coalesce(count_valid, F.lit(1)), 3).alias("ratio_winner_to_valid")  # 使用coalesce来避免除以0
+    )
+
     # 总结：
     # 使用 withColumn 和 when 函数确实在处理复杂的转换和中间步骤时更加灵活。它允许你一步步地添加列，并且更容易管理操作之间的依赖关系。
     # 虽然 select 和 F.expr 也很强大，但在处理表达式和操作顺序时可能需要更加小心
