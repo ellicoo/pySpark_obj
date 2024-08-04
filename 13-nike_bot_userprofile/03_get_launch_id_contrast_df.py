@@ -118,7 +118,7 @@ def get_non_pattern_launch_id_contrast_df(PRODUCT_COUNTRY, received_date):
             .withColumn("ratio_winner_to_valid", F.round(F.col("winner") / F.col("valid"), 3))
 
     )
-    # 等价操作--逻辑细节需要调整
+    # 等价操作
     # result_df = joined_df.select(
     #     "*",
     #     F.count(F.expr("if(ENTRY_STATUS = 'WINNER', 1, NULL)")).over(window_spec).alias("winner"),
@@ -131,6 +131,12 @@ def get_non_pattern_launch_id_contrast_df(PRODUCT_COUNTRY, received_date):
     # 总结：
     # 使用 withColumn 和 when 函数确实在处理复杂的转换和中间步骤时更加灵活。它允许你一步步地添加列，并且更容易管理操作之间的依赖关系。
     # 虽然 select 和 F.expr 也很强大，但在处理表达式和操作顺序时可能需要更加小心
+    # （1）withColumn 和 when：
+    # 优点：逐步添加列，代码清晰，易于理解和维护。每个列的计算是独立的，并且你可以方便地调试每一步。
+    # 缺点：多次调用 withColumn，每次都会生成一个新的 DataFrame 对象，可能会稍微影响性能。
+    # （2）select 和 F.expr：
+    # 优点：可以在一次 select 操作中完成所有的计算。可能在某些情况下，这种方式更高效，因为它避免了多次生成中间 DataFrame。
+    # 缺点：较为复杂，不易于逐步调试和理解每个步骤的计算过程。表达式较长且不易于维护
 
     filtered_result_df = result_df.filter(F.col("valid") >= 500)
 
