@@ -115,6 +115,11 @@ input_df = input_df.groupBy("user_id").agg(F.count(F.expr("if(is_browse = 1,user
                                            F.count(F.expr("if(is_received = 1,user_id,null)")).alias("is_received_cnt"))
 
 # 修改指标结果类型
+# selectExpr允许你使用类似 SQL 的表达式来选择、转换和重命名 DataFrame 的列，如
+# result_df = df.selectExpr(
+#     "name",
+#     "value * 2 as double_value"  # 计算值的两倍，并重命名列
+# )
 input_df = input_df.selectExpr("user_id",
                                "cast(is_browse_cnt as int)",
                                "cast(is_order_cnt as int)",
