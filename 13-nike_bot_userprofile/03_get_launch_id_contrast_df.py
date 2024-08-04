@@ -128,6 +128,10 @@ def get_non_pattern_launch_id_contrast_df(PRODUCT_COUNTRY, received_date):
     #     F.round(F.count(F.expr("if(ENTRY_STATUS = 'WINNER', 1, NULL)")).over(window_spec) /
     #                 F.count(F.expr("if(VALIDATION_RESULT = 'VALID', 1, NULL)")).over(window_spec), 3).alias("ratio_winner_to_valid")
 
+    # 总结：
+    # 使用 withColumn 和 when 函数确实在处理复杂的转换和中间步骤时更加灵活。它允许你一步步地添加列，并且更容易管理操作之间的依赖关系。
+    # 虽然 select 和 F.expr 也很强大，但在处理表达式和操作顺序时可能需要更加小心
+
     filtered_result_df = result_df.filter(F.col("valid") >= 500)
 
     selected_result_df = (
