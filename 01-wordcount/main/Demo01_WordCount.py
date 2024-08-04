@@ -10,6 +10,7 @@ os.environ['SPARK_HOME'] = '/export/server/spark'
 os.environ['PYSPARK_PYTHON'] = '/root/anaconda3/bin/python3'
 # 配置base环境Python解析器的路径
 os.environ['PYSPARK_DRIVER_PYTHON'] = '/root/anaconda3/bin/python3'
+
 """
 class PipelinedRDD(RDD):
 class RDD(object):
